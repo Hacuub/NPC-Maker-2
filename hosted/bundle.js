@@ -1,18 +1,18 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
+var handleNPC = function handleNPC(e) {
   e.preventDefault();
-  $("#domoMessage").animate({
+  $("#npcMessage").animate({
     width: 'hide'
   }, 350);
 
-  if ($("#domoName").val() === '' || $("#domoAge").val() === '') {
-    handleError("RAWR! All fields are required");
+  if ($("#npcName").val() === '' || $("#npcGender").val() === '' || $("#npcAge").val() === '' || $("#npcRace").val() === '' || $("#npcClass").val() === '' || $("#npcalignment").val() === '' || $("#npcLevel").val() === '' || $("#npcDisposition").val() === '' || $("#npcBackstory").val() === '') {
+    handleError("All fields are required");
     return false;
   }
 
-  sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-    loadDomosFromServer();
+  sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function () {
+    loadNPCsFromServer();
   });
   return false;
 };
@@ -21,105 +21,159 @@ function handleDelete(id) {
   var csrfValue = document.querySelector("#csrfID").value;
   var postData = "_csrf=".concat(csrfValue, "&_id=").concat(id);
   sendAjax('DELETE', '/delete', postData, function () {
-    loadDomosFromServer();
+    loadNPCsFromServer();
   });
   return false;
 }
 
-var DomoForm = function DomoForm(props) {
+var NPCForm = function NPCForm(props) {
   return (/*#__PURE__*/React.createElement("form", {
-      id: "domoForm",
-      onSubmit: handleDomo,
-      name: "domoForm",
+      id: "npcForm",
+      onSubmit: NPC,
+      name: "npcForm",
       action: "/maker",
       method: "POST",
-      className: "domoForm"
+      className: "npcForm"
     }, /*#__PURE__*/React.createElement("label", {
       htmlFor: "name"
     }, "Name: "), /*#__PURE__*/React.createElement("input", {
-      id: "domoName",
+      id: "npcName",
       type: "text",
       name: "name",
-      placeholder: "Domo Name"
+      placeholder: "NPC Name"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "gender"
+    }, "Gender: "), /*#__PURE__*/React.createElement("input", {
+      id: "npcGender",
+      type: "text",
+      name: "gender",
+      placeholder: "NPC Gender"
     }), /*#__PURE__*/React.createElement("label", {
       htmlFor: "age"
     }, "Age: "), /*#__PURE__*/React.createElement("input", {
-      id: "domoAge",
+      id: "npcAge",
       type: "text",
       name: "age",
-      placeholder: "Domo Age"
+      placeholder: "NPC Age"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "race"
+    }, "Race: "), /*#__PURE__*/React.createElement("input", {
+      id: "npcRace",
+      type: "text",
+      name: "race",
+      placeholder: "NPC Race"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "class"
+    }, "Class: "), /*#__PURE__*/React.createElement("input", {
+      id: "npcClass",
+      type: "text",
+      name: "class",
+      placeholder: "NPC Class"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "alignment"
+    }, "Alignment: "), /*#__PURE__*/React.createElement("input", {
+      id: "npcAlignment",
+      type: "text",
+      name: "alignment",
+      placeholder: "NPC Alignment"
     }), /*#__PURE__*/React.createElement("label", {
       htmlFor: "level"
     }, "Level: "), /*#__PURE__*/React.createElement("input", {
-      id: "domoLevel",
+      id: "npcLevel",
       type: "text",
       name: "level",
-      placeholder: "Domo Level"
+      placeholder: "NPC Level"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "disposition"
+    }, "Disposition: "), /*#__PURE__*/React.createElement("input", {
+      id: "npcDisposition",
+      type: "text",
+      name: "disposition",
+      placeholder: "NPC Disposition"
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "backstory"
+    }, "Backstory: "), /*#__PURE__*/React.createElement("input", {
+      id: "npcBackstory",
+      type: "text",
+      name: "backstory",
+      placeholder: "NPC Backstory"
     }), /*#__PURE__*/React.createElement("input", {
       type: "hidden",
       id: "csrfID",
       name: "_csrf",
       value: props.csrf
     }), /*#__PURE__*/React.createElement("input", {
-      className: "makeDomoSubmit",
+      className: "makeNPCSubmit",
       type: "submit",
-      value: "Make Domo"
+      value: "Submit  NPC"
     }))
   );
 };
 
-var DomoList = function DomoList(props) {
-  if (props.domos.length === 0) {
+var NPCList = function NPCList(props) {
+  if (props.NPCs.length === 0) {
     return (/*#__PURE__*/React.createElement("div", {
-        className: "domoList"
+        className: "npcList"
       }, /*#__PURE__*/React.createElement("h3", {
-        className: "emptyDomo"
-      }, "No Domos Yet"))
+        className: "emptyNPC"
+      }, "No NPCs Yet"))
     );
   }
 
-  var domoNodes = props.domos.map(function (domo) {
+  var npcNodes = props.NPCs.map(function (NPC) {
     return (/*#__PURE__*/React.createElement("div", {
-        key: domo._id,
-        className: "domo"
+        key: NPC._id,
+        className: "NPC"
       }, /*#__PURE__*/React.createElement("h3", {
-        className: "domoName"
-      }, "Name: ", domo.name, " "), /*#__PURE__*/React.createElement("h3", {
-        className: "domoAge"
-      }, "Age: ", domo.age, " "), /*#__PURE__*/React.createElement("h3", {
-        className: "domoLevel"
-      }, "Level: ", domo.level, " "), /*#__PURE__*/React.createElement("input", {
-        className: "domoDelete",
+        className: "npcName"
+      }, "Name: ", NPC.name, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcGender"
+      }, "Gender: ", NPC.gender, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcAge"
+      }, "Age: ", NPC.age, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcRace"
+      }, "Race: ", NPC.race, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcClass"
+      }, "Class: ", NPC["class"], " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcAlignment"
+      }, "Alignment: ", NPC.alignment, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcLevel"
+      }, "Level: ", NPC.level, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcDisposition"
+      }, "Disposition: ", NPC.disposition, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcBackstory"
+      }, "Backstory: ", NPC.backstory, " "), /*#__PURE__*/React.createElement("input", {
+        className: "npcDelete",
         type: "button",
         value: "Delete",
         onClick: function onClick() {
-          return handleDelete(domo._id);
+          return handleDelete(NPC._id);
         }
       }))
     );
   });
   return (/*#__PURE__*/React.createElement("div", {
-      className: "domoList"
-    }, domoNodes)
+      className: "npcList"
+    }, npcNodes)
   );
 };
 
-var loadDomosFromServer = function loadDomosFromServer() {
-  sendAjax('GET', '/getDomos', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
-      domos: data.domos
-    }), document.querySelector("#domos"));
+var loadNPCsFromServer = function loadNPCsFromServer() {
+  sendAjax('GET', '/getNPCs', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(NPCList, {
+      NPCs: data.NPCs
+    }), document.querySelector("#NPCs"));
   });
 };
 
 var setup = function setup(csrf) {
-  ReactDOM.render( /*#__PURE__*/React.createElement(DomoForm, {
+  ReactDOM.render( /*#__PURE__*/React.createElement(NPCForm, {
     csrf: csrf
-  }), document.querySelector("#makeDomo"));
-  ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
-    domos: []
-  }), document.querySelector("#domos"));
-  loadDomosFromServer();
+  }), document.querySelector("#makeNPC"));
+  ReactDOM.render( /*#__PURE__*/React.createElement("npcList", {
+    NPCs: []
+  }), document.querySelector("#NPCs"));
+  loadNPCsFromServer();
 };
 
 var getToken = function getToken() {
@@ -135,13 +189,13 @@ $(document).ready(function () {
 
 var handleError = function handleError(message) {
   $("#errorMessage").text(message);
-  $("#domoMessage").animate({
+  $("#npcMessage").animate({
     width: 'toggle'
   }, 350);
 };
 
 var redirect = function redirect(response) {
-  $("#domoMessage").animate({
+  $("#npcMessage").animate({
     width: 'toggle'
   }, 350);
   window.location = response.redirect;

@@ -15,7 +15,7 @@ const csrf = require('csurf');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 // const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/DomoMaker';
-const dbURL = 'mongodb+srv://hacuub:Five85585@cluster0.twdhr.mongodb.net/Domomaker?retryWrites=true&w=majority';
+const dbURL = 'mongodb+srv://hacuub:Five85585@cluster0.twdhr.mongodb.net/NPCMaker?retryWrites=true&w=majority';
 const mongooseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,

@@ -1,15 +1,17 @@
-const handleDomo = (e) => {
+const handleNPC = (e) => {
     e.preventDefault();
 
     $("#npcMessage").animate({width:'hide'}, 350);
 
-    if($("#npcName").val() === '' || $("#npcAge").val() ==='') {
+    if($("#npcName").val() === '' || $("#npcGender").val() ==='' || $("#npcAge").val() ===''|| 
+    $("#npcRace").val() ==='' || $("#npcClass").val() ===''|| $("#npcalignment").val() ===''
+    || $("#npcLevel").val() ==='' || $("#npcDisposition").val() ===''|| $("#npcBackstory").val() ==='') {
         handleError("All fields are required");
         return false;
     }
 
-    sendAjax('POST', $("#npcForm").attr("action"), $("#domoForm").serialize(), function() {
-        loadDomosFromServer();
+    sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function() {
+        loadNPCsFromServer();
     });
 
     return false;
@@ -22,81 +24,105 @@ function handleDelete(id) {
     const postData = `_csrf=${csrfValue}&_id=${id}`;
 
     sendAjax('DELETE', '/delete', postData, function() {
-        loadDomosFromServer();
+        loadNPCsFromServer();
     });
 
     return false;
 }
 
-const DomoForm = (props) => {
+const NPCForm = (props) => {
     return (
-        <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
+        <form id="npcForm"
+            onSubmit={NPC}
+            name="npcForm"
             action="/maker"
             method="POST"
-            className="domoForm"
+            className="npcForm"
         >
             <label htmlFor="name">Name: </label>
-            <input id="domoName" type="text" name="name" placeholder="Domo Name" />
+            <input id="npcName" type="text" name="name" placeholder="NPC Name" />
+
+            <label htmlFor="gender">Gender: </label>
+            <input id="npcGender" type="text" name="gender" placeholder="NPC Gender" />
 
             <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="text" name="age" placeholder="Domo Age" />
+            <input id="npcAge" type="text" name="age" placeholder="NPC Age" />
+
+            <label htmlFor="race">Race: </label>
+            <input id="npcRace" type="text" name="race" placeholder="NPC Race" />
+
+            <label htmlFor="class">Class: </label>
+            <input id="npcClass" type="text" name="class" placeholder="NPC Class" />
+
+            <label htmlFor="alignment">Alignment: </label>
+            <input id="npcAlignment" type="text" name="alignment" placeholder="NPC Alignment" />
 
             <label htmlFor="level">Level: </label>
-            <input id="domoLevel" type="text" name="level" placeholder="Domo Level" />
+            <input id="npcLevel" type="text" name="level" placeholder="NPC Level" />
+
+            <label htmlFor="disposition">Disposition: </label>
+            <input id="npcDisposition" type="text" name="disposition" placeholder="NPC Disposition" />
+
+            <label htmlFor="backstory">Backstory: </label>
+            <input id="npcBackstory" type="text" name="backstory" placeholder="NPC Backstory" />
 
             <input type="hidden" id = "csrfID" name="_csrf" value={props.csrf} />
-            <input className="makeDomoSubmit" type="submit" value="Make Domo" />
+            <input className="makeNPCSubmit" type="submit" value="Submit  NPC" />
         </form>
     );
 };
 
-const DomoList = function(props) {
-    if(props.domos.length === 0) {
+const NPCList = function(props) {
+    if(props.NPCs.length === 0) {
         return(
-            <div className="domoList">
-                <h3 className="emptyDomo">No Domos Yet</h3>
+            <div className="npcList">
+                <h3 className="emptyNPC">No NPCs Yet</h3>
             </div>
         );
     }
 
-    const domoNodes = props.domos.map(function(domo){
+    const npcNodes = props.NPCs.map(function(NPC){
         return (
-            <div key={domo._id} className="domo">
-                <h3 className="domoName">Name: {domo.name} </h3>
-                <h3 className="domoAge">Age: {domo.age} </h3>
-                <h3 className="domoLevel">Level: {domo.level} </h3>
-                <input className="domoDelete" type="button" value="Delete" onClick={()=>handleDelete(domo._id)} />
+            <div key={NPC._id} className="NPC">
+                <h3 className="npcName">Name: {NPC.name} </h3>
+                <h3 className="npcGender">Gender: {NPC.gender} </h3>
+                <h3 className="npcAge">Age: {NPC.age} </h3>
+                <h3 className="npcRace">Race: {NPC.race} </h3>
+                <h3 className="npcClass">Class: {NPC.class} </h3>
+                <h3 className="npcAlignment">Alignment: {NPC.alignment} </h3>
+                <h3 className="npcLevel">Level: {NPC.level} </h3>
+                <h3 className="npcDisposition">Disposition: {NPC.disposition} </h3>
+                <h3 className="npcBackstory">Backstory: {NPC.backstory} </h3>
+                <input className="npcDelete" type="button" value="Delete" onClick={()=>handleDelete(NPC._id)} />
             </div>
         );
     });
 
     return (
-        <div className="domoList">
-            {domoNodes}
+        <div className="npcList">
+            {npcNodes}
         </div>
     );
 };
 
-const loadDomosFromServer = () => {
-    sendAjax('GET', '/getDomos', null, (data) => {
+const loadNPCsFromServer = () => {
+    sendAjax('GET', '/getNPCs', null, (data) => {
         ReactDOM.render(
-            <DomoList domos={data.domos} />, document.querySelector("#domos")
+            <NPCList NPCs={data.NPCs} />, document.querySelector("#NPCs")
         );
     });
 };
 
 const setup = function(csrf) {
     ReactDOM.render(
-        <DomoForm csrf={csrf} />, document.querySelector("#makeDomo")
+        <NPCForm csrf={csrf} />, document.querySelector("#makeNPC")
     );
 
     ReactDOM.render(
-        <DomoList domos={[]} />, document.querySelector("#domos")
+        <npcList NPCs={[]} />, document.querySelector("#NPCs")
     );
 
-    loadDomosFromServer();
+    loadNPCsFromServer();
 };
 
 const getToken = () => {

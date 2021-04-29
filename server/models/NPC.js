@@ -80,7 +80,7 @@ NPCSchema.statics.toAPI = (doc) => ({
   age: doc.age,
   gender: doc.gender,
   race: doc.race,
-  class: doc.class,
+  classNPC: doc.classNPC,
   alignment: doc.alignment,
   level: doc.level,
   disposition: doc.disposition,
@@ -92,7 +92,7 @@ NPCSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return NPCModel.find(search).select(' _id name age gender race class alignment level disposition backstory').lean().exec(callback);
+  return NPCModel.find(search).select(' _id name age gender race classNPC alignment level disposition backstory').lean().exec(callback);
 };
 
 NPCModel = mongoose.model('NPC', NPCSchema);

@@ -11,29 +11,45 @@ const handleNPC = (e) => {
     }
 
     sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function() {
-        loadNPCsFromServer();
+        ReactDOM.render(
+            <NPCPostSuccess />, document.querySelector("#success")
+        );
     });
 
     return false;
 };
 
-function handleDelete(id) {
-
-    const csrfValue = document.querySelector("#csrfID").value;
-
-    const postData = `_csrf=${csrfValue}&_id=${id}`;
+function handleDelete(id, csrf) {
+    const postData = `_csrf=${csrf}&_id=${id}`;
 
     sendAjax('DELETE', '/delete', postData, function() {
-        loadNPCsFromServer();
+        createAdminWindow();
     });
 
     return false;
-}
+};
+
+function handleSearch() {
+    const searchText = document.querySelector(".searchBarText").value.trim();
+    const NPCSearchList = [];
+    sendAjax('GET', '/getNPCs', null, (data) => {
+        for(let i = 0; i < data.NPCs.length; i++){
+            if(data.NPCs[i].name.includes(searchText)){
+                NPCSearchList.push(data.NPCs[i]);
+            }
+        };
+        ReactDOM.render(
+            <NPCList NPCs={NPCSearchList}/>, document.querySelector("#NPCs")
+        );
+    });
+
+    return false;
+};
 
 const NPCForm = (props) => {
     return (
         <form id="npcForm"
-            onSubmit={NPC}
+            onSubmit={handleNPC}
             name="npcForm"
             action="/maker"
             method="POST"
@@ -51,8 +67,8 @@ const NPCForm = (props) => {
             <label htmlFor="race">Race: </label>
             <input id="npcRace" type="text" name="race" placeholder="NPC Race" />
 
-            <label htmlFor="class">Class: </label>
-            <input id="npcClass" type="text" name="class" placeholder="NPC Class" />
+            <label htmlFor="classNPC">Class: </label>
+            <input id="npcClass" type="text" name="classNPC" placeholder="NPC Class" />
 
             <label htmlFor="alignment">Alignment: </label>
             <input id="npcAlignment" type="text" name="alignment" placeholder="NPC Alignment" />
@@ -93,7 +109,6 @@ const NPCList = function(props) {
                 <h3 className="npcLevel">Level: {NPC.level} </h3>
                 <h3 className="npcDisposition">Disposition: {NPC.disposition} </h3>
                 <h3 className="npcBackstory">Backstory: {NPC.backstory} </h3>
-                <input className="npcDelete" type="button" value="Delete" onClick={()=>handleDelete(NPC._id)} />
             </div>
         );
     });
@@ -105,6 +120,81 @@ const NPCList = function(props) {
     );
 };
 
+const NPCListAdmin = function(props, csrf) {
+    if(props.NPCs.length === 0) {
+        return(
+            <div className="npcList">
+                <h3 className="emptyNPC">No NPCs Yet</h3>
+            </div>
+        );
+    }
+
+    const npcNodes = props.NPCs.map(function(NPC){
+        return (
+            <div key={NPC._id} className="NPC">
+                <h3 className="npcName">Name: {NPC.name} </h3>
+                <h3 className="npcGender">Gender: {NPC.gender} </h3>
+                <h3 className="npcAge">Age: {NPC.age} </h3>
+                <h3 className="npcRace">Race: {NPC.race} </h3>
+                <h3 className="npcClass">Class: {NPC.class} </h3>
+                <h3 className="npcAlignment">Alignment: {NPC.alignment} </h3>
+                <h3 className="npcLevel">Level: {NPC.level} </h3>
+                <h3 className="npcDisposition">Disposition: {NPC.disposition} </h3>
+                <h3 className="npcBackstory">Backstory: {NPC.backstory} </h3>
+                <input className="npcDelete" type="button" value="Delete (WIP)" onClick={()=>handleDelete(NPC._id, csrf)} />
+            </div>
+        );
+    });
+
+    return (
+        <div className="npcList">
+            {npcNodes}
+        </div>
+    );
+};
+
+const RandomNPC = function(NPC) {
+    if(NPC === null) {
+        return(
+            <div className="npcList">
+                <h3 className="emptyNPC">No NPCs Yet</h3>
+            </div>
+        );
+    }
+    else{
+        return (
+            <div key={NPC._id} className="NPC">
+                <h3 className="npcName">Name: {NPC.currentNPC.name} </h3>
+                <h3 className="npcGender">Gender: {NPC.currentNPC.gender} </h3>
+                <h3 className="npcAge">Age: {NPC.currentNPC.age} </h3>
+                <h3 className="npcRace">Race: {NPC.currentNPC.race} </h3>
+                <h3 className="npcClass">Class: {NPC.currentNPC.class} </h3>
+                <h3 className="npcAlignment">Alignment: {NPC.currentNPC.alignment} </h3>
+                <h3 className="npcLevel">Level: {NPC.currentNPC.level} </h3>
+                <h3 className="npcDisposition">Disposition: {NPC.currentNPC.disposition} </h3>
+                <h3 className="npcBackstory">Backstory: {NPC.currentNPC.backstory} </h3>
+            </div>
+        );
+    }
+};
+
+const SearchBar = function() {
+    return (
+    <div id="search">
+        <input className = "searchBarText" type = "text" placeholder = "Search..."/>
+        <input className="searchSubmit" type="submit" value="Search" onClick={()=>handleSearch()}/>
+    </div>
+    );
+}
+
+const NPCPostSuccess = function() {
+    return (
+    <div id = "postSuccess">
+        <h3>NPC Created Successfully</h3>
+    </div>
+    );
+};
+
 const loadNPCsFromServer = () => {
     sendAjax('GET', '/getNPCs', null, (data) => {
         ReactDOM.render(
@@ -113,17 +203,84 @@ const loadNPCsFromServer = () => {
     });
 };
 
-const setup = function(csrf) {
+const createRandomWindow = () => {
+    sendAjax('GET', '/getNPCs', null, (data) => {
+        let randomNPC = Math.floor(Math.random() * (data.NPCs.length))
+        ReactDOM.render(
+            <RandomNPC currentNPC={data.NPCs[randomNPC]}/>, document.querySelector("#NPCs")
+        );
+        ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+        ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));
+        ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+    });
+};
+
+const createSearchWindow = () => {
+    ReactDOM.render(
+        <SearchBar />, document.querySelector("#searchBar")
+    );
+    ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#NPCs"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+};
+
+const createSubmitWindow = (csrf) => {
     ReactDOM.render(
         <NPCForm csrf={csrf} />, document.querySelector("#makeNPC")
     );
+    ReactDOM.unmountComponentAtNode(document.querySelector("#NPCs"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+};
+
+const createAdminWindow = (csrf) => {
+    sendAjax('GET', '/getNPCs', null, (data) => {
+        ReactDOM.render(
+            <NPCListAdmin NPCs={data.NPCs} csrf={csrf} />, document.querySelector("#NPCs")
+        );
+        ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+        ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));
+        ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+    });
+};
+
+const setup = function(csrf) {
+    const randomButton = document.querySelector("#randomButton");
+    const searchButton = document.querySelector("#searchButton");
+    const submitButton = document.querySelector("#submitButton");
+    const adminButton = document.querySelector("#adminButton");
+
+    randomButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createRandomWindow();
+        return false;
+    });
+
+    searchButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createSearchWindow();
+        return false;
+    });
+
+    submitButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createSubmitWindow(csrf);
+        return false;
+    });
+
+    adminButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createAdminWindow(csrf);
+        return false;
+    });
 
     ReactDOM.render(
-        <npcList NPCs={[]} />, document.querySelector("#NPCs")
+        <NPCList NPCs={[]} />, document.querySelector("#NPCs")
     );
 
-    loadNPCsFromServer();
+    createRandomWindow();
 };
+
 
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {

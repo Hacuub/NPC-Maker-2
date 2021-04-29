@@ -2,7 +2,7 @@ const mongoDB = require('mongodb').MongoClient;
 const mongodbID = require('mongodb');
 const models = require('../models');
 
-const dbURL = 'mongodb+srv://hacuub:Five85585@cluster0.twdhr.mongodb.net/Domomaker?retryWrites=true&w=majority';
+const dbURL = 'mongodb+srv://hacuub:Five85585@cluster0.twdhr.mongodb.net/NPCMaker?retryWrites=true&w=majority';
 
 
 const { NPC } = models;
@@ -14,12 +14,24 @@ const makerPage = (req, res) => {
       return res.status(400).json({ error: 'An error occurred' });
     }
 
-    return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
+    return res.render('app', { csrfToken: req.csrfToken(), NPCs: docs });
   });
 };
 
+const randomPage = (req, res) => {
+
+};
+
+const searchPage = (req, res) => {
+
+};
+
+const adminPage = (req, res) => {
+
+};
+
 const makeNPC = (req, res) => {
-  if (!req.body.name || !req.body.gender || !req.body.age || !req.body.race || !req.body.class
+  if (!req.body.name || !req.body.gender || !req.body.age || !req.body.race || !req.body.classNPC
     || !req.body.alignment || !req.body.level || !req.body.disposition || !req.body.backstory) {
     return res.status(400).json({ error: 'All fields are required' });
   }
@@ -28,12 +40,12 @@ const makeNPC = (req, res) => {
     name: req.body.name,
     gender: req.body.gender,
     age: req.body.age,
-    race: req.body.name,
-    class: req.body.name,
-    alignment: req.body.name,
+    race: req.body.race,
+    classNPC: req.body.classNPC,
+    alignment: req.body.alignment,
     level: req.body.level,
-    disposition: req.body.name,
-    backstory: req.body.level,
+    disposition: req.body.disposition,
+    backstory: req.body.backstory,
     owner: req.session.account._id,
   };
 
@@ -92,3 +104,6 @@ module.exports.makerPage = makerPage;
 module.exports.getNPCs = getNPCs;
 module.exports.make = makeNPC;
 module.exports.deleteNPC = deleteNPC;
+module.exports.randomPage = randomPage;
+module.exports.searchPage = searchPage;
+module.exports.adminPage = adminPage;

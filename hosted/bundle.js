@@ -12,24 +12,45 @@ var handleNPC = function handleNPC(e) {
   }
 
   sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function () {
-    loadNPCsFromServer();
+    ReactDOM.render( /*#__PURE__*/React.createElement(NPCPostSuccess, null), document.querySelector("#success"));
   });
   return false;
 };
 
-function handleDelete(id) {
-  var csrfValue = document.querySelector("#csrfID").value;
-  var postData = "_csrf=".concat(csrfValue, "&_id=").concat(id);
+function handleDelete(id, csrf) {
+  var postData = "_csrf=".concat(csrf, "&_id=").concat(id);
   sendAjax('DELETE', '/delete', postData, function () {
-    loadNPCsFromServer();
+    createAdminWindow();
   });
   return false;
 }
 
+;
+
+function handleSearch() {
+  var searchText = document.querySelector(".searchBarText").value.trim();
+  var NPCSearchList = [];
+  sendAjax('GET', '/getNPCs', null, function (data) {
+    for (var i = 0; i < data.NPCs.length; i++) {
+      if (data.NPCs[i].name.includes(searchText)) {
+        NPCSearchList.push(data.NPCs[i]);
+      }
+    }
+
+    ;
+    ReactDOM.render( /*#__PURE__*/React.createElement(NPCList, {
+      NPCs: NPCSearchList
+    }), document.querySelector("#NPCs"));
+  });
+  return false;
+}
+
+;
+
 var NPCForm = function NPCForm(props) {
   return (/*#__PURE__*/React.createElement("form", {
       id: "npcForm",
-      onSubmit: NPC,
+      onSubmit: handleNPC,
       name: "npcForm",
       action: "/maker",
       method: "POST",
@@ -63,11 +84,11 @@ var NPCForm = function NPCForm(props) {
       name: "race",
       placeholder: "NPC Race"
     }), /*#__PURE__*/React.createElement("label", {
-      htmlFor: "class"
+      htmlFor: "classNPC"
     }, "Class: "), /*#__PURE__*/React.createElement("input", {
       id: "npcClass",
       type: "text",
-      name: "class",
+      name: "classNPC",
       placeholder: "NPC Class"
     }), /*#__PURE__*/React.createElement("label", {
       htmlFor: "alignment"
@@ -142,12 +163,53 @@ var NPCList = function NPCList(props) {
         className: "npcDisposition"
       }, "Disposition: ", NPC.disposition, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcBackstory"
+      }, "Backstory: ", NPC.backstory, " "))
+    );
+  });
+  return (/*#__PURE__*/React.createElement("div", {
+      className: "npcList"
+    }, npcNodes)
+  );
+};
+
+var NPCListAdmin = function NPCListAdmin(props, csrf) {
+  if (props.NPCs.length === 0) {
+    return (/*#__PURE__*/React.createElement("div", {
+        className: "npcList"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "emptyNPC"
+      }, "No NPCs Yet"))
+    );
+  }
+
+  var npcNodes = props.NPCs.map(function (NPC) {
+    return (/*#__PURE__*/React.createElement("div", {
+        key: NPC._id,
+        className: "NPC"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "npcName"
+      }, "Name: ", NPC.name, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcGender"
+      }, "Gender: ", NPC.gender, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcAge"
+      }, "Age: ", NPC.age, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcRace"
+      }, "Race: ", NPC.race, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcClass"
+      }, "Class: ", NPC["class"], " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcAlignment"
+      }, "Alignment: ", NPC.alignment, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcLevel"
+      }, "Level: ", NPC.level, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcDisposition"
+      }, "Disposition: ", NPC.disposition, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcBackstory"
       }, "Backstory: ", NPC.backstory, " "), /*#__PURE__*/React.createElement("input", {
         className: "npcDelete",
         type: "button",
-        value: "Delete",
+        value: "Delete (WIP)",
         onClick: function onClick() {
-          return handleDelete(NPC._id);
+          return handleDelete(NPC._id, csrf);
         }
       }))
     );
@@ -155,6 +217,66 @@ var NPCList = function NPCList(props) {
   return (/*#__PURE__*/React.createElement("div", {
       className: "npcList"
     }, npcNodes)
+  );
+};
+
+var RandomNPC = function RandomNPC(NPC) {
+  if (NPC === null) {
+    return (/*#__PURE__*/React.createElement("div", {
+        className: "npcList"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "emptyNPC"
+      }, "No NPCs Yet"))
+    );
+  } else {
+    return (/*#__PURE__*/React.createElement("div", {
+        key: NPC._id,
+        className: "NPC"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "npcName"
+      }, "Name: ", NPC.currentNPC.name, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcGender"
+      }, "Gender: ", NPC.currentNPC.gender, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcAge"
+      }, "Age: ", NPC.currentNPC.age, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcRace"
+      }, "Race: ", NPC.currentNPC.race, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcClass"
+      }, "Class: ", NPC.currentNPC["class"], " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcAlignment"
+      }, "Alignment: ", NPC.currentNPC.alignment, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcLevel"
+      }, "Level: ", NPC.currentNPC.level, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcDisposition"
+      }, "Disposition: ", NPC.currentNPC.disposition, " "), /*#__PURE__*/React.createElement("h3", {
+        className: "npcBackstory"
+      }, "Backstory: ", NPC.currentNPC.backstory, " "))
+    );
+  }
+};
+
+var SearchBar = function SearchBar() {
+  return (/*#__PURE__*/React.createElement("div", {
+      id: "search"
+    }, /*#__PURE__*/React.createElement("input", {
+      className: "searchBarText",
+      type: "text",
+      placeholder: "Search..."
+    }), /*#__PURE__*/React.createElement("input", {
+      className: "searchSubmit",
+      type: "submit",
+      value: "Search",
+      onClick: function onClick() {
+        return handleSearch();
+      }
+    }))
+  );
+};
+
+var NPCPostSuccess = function NPCPostSuccess() {
+  return (/*#__PURE__*/React.createElement("div", {
+      id: "postSuccess"
+    }, /*#__PURE__*/React.createElement("h3", null, "NPC Created Successfully"))
   );
 };
 
@@ -166,14 +288,75 @@ var loadNPCsFromServer = function loadNPCsFromServer() {
   });
 };
 
-var setup = function setup(csrf) {
+var createRandomWindow = function createRandomWindow() {
+  sendAjax('GET', '/getNPCs', null, function (data) {
+    var randomNPC = Math.floor(Math.random() * data.NPCs.length);
+    ReactDOM.render( /*#__PURE__*/React.createElement(RandomNPC, {
+      currentNPC: data.NPCs[randomNPC]
+    }), document.querySelector("#NPCs"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+  });
+};
+
+var createSearchWindow = function createSearchWindow() {
+  ReactDOM.render( /*#__PURE__*/React.createElement(SearchBar, null), document.querySelector("#searchBar"));
+  ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+  ReactDOM.unmountComponentAtNode(document.querySelector("#NPCs"));
+  ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+};
+
+var createSubmitWindow = function createSubmitWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(NPCForm, {
     csrf: csrf
   }), document.querySelector("#makeNPC"));
-  ReactDOM.render( /*#__PURE__*/React.createElement("npcList", {
+  ReactDOM.unmountComponentAtNode(document.querySelector("#NPCs"));
+  ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));
+  ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+};
+
+var createAdminWindow = function createAdminWindow(csrf) {
+  sendAjax('GET', '/getNPCs', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(NPCListAdmin, {
+      NPCs: data.NPCs,
+      csrf: csrf
+    }), document.querySelector("#NPCs"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));
+    ReactDOM.unmountComponentAtNode(document.querySelector("#success"));
+  });
+};
+
+var setup = function setup(csrf) {
+  var randomButton = document.querySelector("#randomButton");
+  var searchButton = document.querySelector("#searchButton");
+  var submitButton = document.querySelector("#submitButton");
+  var adminButton = document.querySelector("#adminButton");
+  randomButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createRandomWindow();
+    return false;
+  });
+  searchButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createSearchWindow();
+    return false;
+  });
+  submitButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createSubmitWindow(csrf);
+    return false;
+  });
+  adminButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createAdminWindow(csrf);
+    return false;
+  });
+  ReactDOM.render( /*#__PURE__*/React.createElement(NPCList, {
     NPCs: []
   }), document.querySelector("#NPCs"));
-  loadNPCsFromServer();
+  createRandomWindow();
 };
 
 var getToken = function getToken() {

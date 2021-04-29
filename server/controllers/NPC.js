@@ -18,18 +18,6 @@ const makerPage = (req, res) => {
   });
 };
 
-const randomPage = (req, res) => {
-
-};
-
-const searchPage = (req, res) => {
-
-};
-
-const adminPage = (req, res) => {
-
-};
-
 const makeNPC = (req, res) => {
   if (!req.body.name || !req.body.gender || !req.body.age || !req.body.race || !req.body.classNPC
     || !req.body.alignment || !req.body.level || !req.body.disposition || !req.body.backstory) {
@@ -104,6 +92,3 @@ module.exports.makerPage = makerPage;
 module.exports.getNPCs = getNPCs;
 module.exports.make = makeNPC;
 module.exports.deleteNPC = deleteNPC;
-module.exports.randomPage = randomPage;
-module.exports.searchPage = searchPage;
-module.exports.adminPage = adminPage;

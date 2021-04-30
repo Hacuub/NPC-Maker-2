@@ -155,7 +155,7 @@ var NPCList = function NPCList(props) {
         className: "npcRace"
       }, "Race: ", NPC.race, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcClass"
-      }, "Class: ", NPC["class"], " "), /*#__PURE__*/React.createElement("h3", {
+      }, "Class: ", NPC.classNPC, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcAlignment"
       }, "Alignment: ", NPC.alignment, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcLevel"
@@ -196,7 +196,7 @@ var NPCListAdmin = function NPCListAdmin(props, csrf) {
         className: "npcRace"
       }, "Race: ", NPC.race, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcClass"
-      }, "Class: ", NPC["class"], " "), /*#__PURE__*/React.createElement("h3", {
+      }, "Class: ", NPC.classNPC, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcAlignment"
       }, "Alignment: ", NPC.alignment, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcLevel"
@@ -221,6 +221,8 @@ var NPCListAdmin = function NPCListAdmin(props, csrf) {
 };
 
 var RandomNPC = function RandomNPC(NPC) {
+  console.log(NPC);
+
   if (NPC === null) {
     return (/*#__PURE__*/React.createElement("div", {
         className: "npcList"
@@ -242,7 +244,7 @@ var RandomNPC = function RandomNPC(NPC) {
         className: "npcRace"
       }, "Race: ", NPC.currentNPC.race, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcClass"
-      }, "Class: ", NPC.currentNPC["class"], " "), /*#__PURE__*/React.createElement("h3", {
+      }, "Class: ", NPC.currentNPC.classNPC, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcAlignment"
       }, "Alignment: ", NPC.currentNPC.alignment, " "), /*#__PURE__*/React.createElement("h3", {
         className: "npcLevel"

@@ -104,7 +104,7 @@ const NPCList = function(props) {
                 <h3 className="npcGender">Gender: {NPC.gender} </h3>
                 <h3 className="npcAge">Age: {NPC.age} </h3>
                 <h3 className="npcRace">Race: {NPC.race} </h3>
-                <h3 className="npcClass">Class: {NPC.class} </h3>
+                <h3 className="npcClass">Class: {NPC.classNPC} </h3>
                 <h3 className="npcAlignment">Alignment: {NPC.alignment} </h3>
                 <h3 className="npcLevel">Level: {NPC.level} </h3>
                 <h3 className="npcDisposition">Disposition: {NPC.disposition} </h3>
@@ -136,7 +136,7 @@ const NPCListAdmin = function(props, csrf) {
                 <h3 className="npcGender">Gender: {NPC.gender} </h3>
                 <h3 className="npcAge">Age: {NPC.age} </h3>
                 <h3 className="npcRace">Race: {NPC.race} </h3>
-                <h3 className="npcClass">Class: {NPC.class} </h3>
+                <h3 className="npcClass">Class: {NPC.classNPC} </h3>
                 <h3 className="npcAlignment">Alignment: {NPC.alignment} </h3>
                 <h3 className="npcLevel">Level: {NPC.level} </h3>
                 <h3 className="npcDisposition">Disposition: {NPC.disposition} </h3>
@@ -154,6 +154,7 @@ const NPCListAdmin = function(props, csrf) {
 };
 
 const RandomNPC = function(NPC) {
+    console.log(NPC);
     if(NPC === null) {
         return(
             <div className="npcList">
@@ -168,7 +169,7 @@ const RandomNPC = function(NPC) {
                 <h3 className="npcGender">Gender: {NPC.currentNPC.gender} </h3>
                 <h3 className="npcAge">Age: {NPC.currentNPC.age} </h3>
                 <h3 className="npcRace">Race: {NPC.currentNPC.race} </h3>
-                <h3 className="npcClass">Class: {NPC.currentNPC.class} </h3>
+                <h3 className="npcClass">Class: {NPC.currentNPC.classNPC} </h3>
                 <h3 className="npcAlignment">Alignment: {NPC.currentNPC.alignment} </h3>
                 <h3 className="npcLevel">Level: {NPC.currentNPC.level} </h3>
                 <h3 className="npcDisposition">Disposition: {NPC.currentNPC.disposition} </h3>

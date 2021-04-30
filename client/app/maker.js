@@ -120,8 +120,9 @@ const NPCList = function(props) {
     );
 };
 
-const NPCListAdmin = function(props, csrf) {
-    if(props.NPCs.length === 0) {
+const NPCListAdmin = function(input) {
+    console.log(input.props);
+    if(input.props.data.NPCs.length === 0) {
         return(
             <div className="npcList">
                 <h3 className="emptyNPC">No NPCs Yet</h3>
@@ -129,7 +130,7 @@ const NPCListAdmin = function(props, csrf) {
         );
     }
 
-    const npcNodes = props.NPCs.map(function(NPC){
+    const npcNodes = input.props.data.NPCs.map(function(NPC){
         return (
             <div key={NPC._id} className="NPC">
                 <h3 className="npcName">Name: {NPC.name} </h3>
@@ -141,7 +142,7 @@ const NPCListAdmin = function(props, csrf) {
                 <h3 className="npcLevel">Level: {NPC.level} </h3>
                 <h3 className="npcDisposition">Disposition: {NPC.disposition} </h3>
                 <h3 className="npcBackstory">Backstory: {NPC.backstory} </h3>
-                <input className="npcDelete" type="button" value="Delete (WIP)" onClick={()=>handleDelete(NPC._id, csrf)} />
+                <input className="npcDelete" type="button" value="Delete (WIP)" onClick={()=>handleDelete(NPC._id, input.props.csrf)} />
             </div>
         );
     });
@@ -154,7 +155,6 @@ const NPCListAdmin = function(props, csrf) {
 };
 
 const RandomNPC = function(NPC) {
-    console.log(NPC);
     if(NPC === null) {
         return(
             <div className="npcList">
@@ -236,8 +236,9 @@ const createSubmitWindow = (csrf) => {
 
 const createAdminWindow = (csrf) => {
     sendAjax('GET', '/getNPCs', null, (data) => {
+        let props = {data, csrf};
         ReactDOM.render(
-            <NPCListAdmin NPCs={data.NPCs} csrf={csrf} />, document.querySelector("#NPCs")
+            <NPCListAdmin props = {props} />, document.querySelector("#NPCs")
         );
         ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
         ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));

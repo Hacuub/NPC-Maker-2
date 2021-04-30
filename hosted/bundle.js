@@ -172,8 +172,10 @@ var NPCList = function NPCList(props) {
   );
 };
 
-var NPCListAdmin = function NPCListAdmin(props, csrf) {
-  if (props.NPCs.length === 0) {
+var NPCListAdmin = function NPCListAdmin(input) {
+  console.log(input.props);
+
+  if (input.props.data.NPCs.length === 0) {
     return (/*#__PURE__*/React.createElement("div", {
         className: "npcList"
       }, /*#__PURE__*/React.createElement("h3", {
@@ -182,7 +184,7 @@ var NPCListAdmin = function NPCListAdmin(props, csrf) {
     );
   }
 
-  var npcNodes = props.NPCs.map(function (NPC) {
+  var npcNodes = input.props.data.NPCs.map(function (NPC) {
     return (/*#__PURE__*/React.createElement("div", {
         key: NPC._id,
         className: "NPC"
@@ -209,7 +211,7 @@ var NPCListAdmin = function NPCListAdmin(props, csrf) {
         type: "button",
         value: "Delete (WIP)",
         onClick: function onClick() {
-          return handleDelete(NPC._id, csrf);
+          return handleDelete(NPC._id, input.props.csrf);
         }
       }))
     );
@@ -221,8 +223,6 @@ var NPCListAdmin = function NPCListAdmin(props, csrf) {
 };
 
 var RandomNPC = function RandomNPC(NPC) {
-  console.log(NPC);
-
   if (NPC === null) {
     return (/*#__PURE__*/React.createElement("div", {
         className: "npcList"
@@ -320,9 +320,12 @@ var createSubmitWindow = function createSubmitWindow(csrf) {
 
 var createAdminWindow = function createAdminWindow(csrf) {
   sendAjax('GET', '/getNPCs', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(NPCListAdmin, {
-      NPCs: data.NPCs,
+    var props = {
+      data: data,
       csrf: csrf
+    };
+    ReactDOM.render( /*#__PURE__*/React.createElement(NPCListAdmin, {
+      props: props
     }), document.querySelector("#NPCs"));
     ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
     ReactDOM.unmountComponentAtNode(document.querySelector("#searchBar"));

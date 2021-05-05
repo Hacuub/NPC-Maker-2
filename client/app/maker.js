@@ -10,8 +10,6 @@ const handleNPC = (e) => {
         return false;
     }
 
-    console.log($("#npcForm").serialize());
-
     sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function() {
         let csrfPassIn = $("#csrfID").val();
         ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
@@ -29,10 +27,9 @@ const handleNPC = (e) => {
 
 function handleDelete(id, csrf) {
     const postData = `_csrf=${csrf}&_id=${id}`;
-    console.log(postData);
 
     sendAjax('DELETE', '/delete', postData, function() {
-        createAdminWindow();
+        createAdminWindow(csrf);
     });
 
     return false;
@@ -137,7 +134,6 @@ const NPCListAdmin = function(input) {
             </div>
         );
     }
-
     const npcNodes = input.props.data.NPCs.map(function(NPC){
         return (
             <div key={NPC._id} className="NPC">
@@ -163,7 +159,7 @@ const NPCListAdmin = function(input) {
 };
 
 const RandomNPC = function(NPC) {
-    if(NPC === null) {
+    if(NPC.currentNPC === undefined) {
         return(
             <div className="npcList">
                 <h3 className="emptyNPC">No NPCs Yet</h3>

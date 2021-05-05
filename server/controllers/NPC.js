@@ -64,7 +64,7 @@ const deleteNPC = (req, res) => {
 
     const dbo = db.db('NPCMaker');
     const query = { _id: new mongodbID.ObjectID(req.body._id) };
-    dbo.collection('NPCs').deleteOne(query, (err1) => {
+    dbo.collection('npcs').deleteOne(query, (err1) => {
       if (err1) {
         console.log('Could not delete from database');
         throw err1;

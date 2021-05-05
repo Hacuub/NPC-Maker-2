@@ -11,7 +11,6 @@ var handleNPC = function handleNPC(e) {
     return false;
   }
 
-  console.log($("#npcForm").serialize());
   sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function () {
     var csrfPassIn = $("#csrfID").val();
     ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
@@ -25,9 +24,8 @@ var handleNPC = function handleNPC(e) {
 
 function handleDelete(id, csrf) {
   var postData = "_csrf=".concat(csrf, "&_id=").concat(id);
-  console.log(postData);
   sendAjax('DELETE', '/delete', postData, function () {
-    createAdminWindow();
+    createAdminWindow(csrf);
   });
   return false;
 }
@@ -228,7 +226,7 @@ var NPCListAdmin = function NPCListAdmin(input) {
 };
 
 var RandomNPC = function RandomNPC(NPC) {
-  if (NPC === null) {
+  if (NPC.currentNPC === undefined) {
     return (/*#__PURE__*/React.createElement("div", {
         className: "npcList"
       }, /*#__PURE__*/React.createElement("h3", {

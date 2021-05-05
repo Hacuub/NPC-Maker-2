@@ -11,7 +11,13 @@ var handleNPC = function handleNPC(e) {
     return false;
   }
 
+  console.log($("#npcForm").serialize());
   sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function () {
+    var csrfPassIn = $("#csrfID").val();
+    ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+    ReactDOM.render( /*#__PURE__*/React.createElement(NPCForm, {
+      csrf: csrfPassIn
+    }), document.querySelector("#makeNPC"));
     ReactDOM.render( /*#__PURE__*/React.createElement(NPCPostSuccess, null), document.querySelector("#success"));
   });
   return false;
@@ -19,6 +25,7 @@ var handleNPC = function handleNPC(e) {
 
 function handleDelete(id, csrf) {
   var postData = "_csrf=".concat(csrf, "&_id=").concat(id);
+  console.log(postData);
   sendAjax('DELETE', '/delete', postData, function () {
     createAdminWindow();
   });
@@ -73,9 +80,9 @@ var NPCForm = function NPCForm(props) {
       htmlFor: "age"
     }, "Age: "), /*#__PURE__*/React.createElement("input", {
       id: "npcAge",
-      type: "text",
+      type: "number",
       name: "age",
-      placeholder: "NPC Age"
+      step: "1"
     }), /*#__PURE__*/React.createElement("label", {
       htmlFor: "race"
     }, "Race: "), /*#__PURE__*/React.createElement("input", {
@@ -101,9 +108,9 @@ var NPCForm = function NPCForm(props) {
       htmlFor: "level"
     }, "Level: "), /*#__PURE__*/React.createElement("input", {
       id: "npcLevel",
-      type: "text",
+      type: "number",
       name: "level",
-      placeholder: "NPC Level"
+      step: "1"
     }), /*#__PURE__*/React.createElement("label", {
       htmlFor: "disposition"
     }, "Disposition: "), /*#__PURE__*/React.createElement("input", {
@@ -173,8 +180,6 @@ var NPCList = function NPCList(props) {
 };
 
 var NPCListAdmin = function NPCListAdmin(input) {
-  console.log(input.props);
-
   if (input.props.data.NPCs.length === 0) {
     return (/*#__PURE__*/React.createElement("div", {
         className: "npcList"

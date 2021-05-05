@@ -10,10 +10,18 @@ const handleNPC = (e) => {
         return false;
     }
 
+    console.log($("#npcForm").serialize());
+
     sendAjax('POST', $("#npcForm").attr("action"), $("#npcForm").serialize(), function() {
+        let csrfPassIn = $("#csrfID").val();
+        ReactDOM.unmountComponentAtNode(document.querySelector("#makeNPC"));
+        ReactDOM.render(
+            <NPCForm csrf={csrfPassIn} />, document.querySelector("#makeNPC")
+        );
         ReactDOM.render(
             <NPCPostSuccess />, document.querySelector("#success")
         );
+        
     });
 
     return false;
@@ -21,6 +29,7 @@ const handleNPC = (e) => {
 
 function handleDelete(id, csrf) {
     const postData = `_csrf=${csrf}&_id=${id}`;
+    console.log(postData);
 
     sendAjax('DELETE', '/delete', postData, function() {
         createAdminWindow();
@@ -62,7 +71,7 @@ const NPCForm = (props) => {
             <input id="npcGender" type="text" name="gender" placeholder="NPC Gender" />
 
             <label htmlFor="age">Age: </label>
-            <input id="npcAge" type="text" name="age" placeholder="NPC Age" />
+            <input id="npcAge" type="number" name="age" step="1" />
 
             <label htmlFor="race">Race: </label>
             <input id="npcRace" type="text" name="race" placeholder="NPC Race" />
@@ -74,7 +83,7 @@ const NPCForm = (props) => {
             <input id="npcAlignment" type="text" name="alignment" placeholder="NPC Alignment" />
 
             <label htmlFor="level">Level: </label>
-            <input id="npcLevel" type="text" name="level" placeholder="NPC Level" />
+            <input id="npcLevel" type="number" name="level" step="1" />
 
             <label htmlFor="disposition">Disposition: </label>
             <input id="npcDisposition" type="text" name="disposition" placeholder="NPC Disposition" />
@@ -121,7 +130,6 @@ const NPCList = function(props) {
 };
 
 const NPCListAdmin = function(input) {
-    console.log(input.props);
     if(input.props.data.NPCs.length === 0) {
         return(
             <div className="npcList">

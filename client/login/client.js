@@ -1,8 +1,8 @@
+//  handles user login and redirection
 const handleLogin = (e) => {
     e.preventDefault();
 
-    $("#npcMessage").animate({width:'hide'}, 350);
-
+    //  validates the username and password
     if($("#user").val() === '' || $("#pass").val() ==='') {
         handleError("Username or password is empty");
         return false;
@@ -15,11 +15,11 @@ const handleLogin = (e) => {
     return false;
 };
 
+//  handles new signups and redirection
 const handleSignup = (e) => {
     e.preventDefault();
 
-    $("#npcMessage").animate({width:'hide'}, 350);
-
+    //  validates username and password
     if($("#user").val ==='' || ("#pass").val ===''  || ("#pass2").val ==='' ) {
         handleError("All fields are required");
         return false;
@@ -34,6 +34,7 @@ const handleSignup = (e) => {
     return false;
 };
 
+//  login window in react
 const LoginWindow = (props) => {
     return (
         <form id="loginForm" name="loginForm"
@@ -54,6 +55,7 @@ const LoginWindow = (props) => {
     );
 };
 
+//  signup window in react
 const SignupWindow = (props) => {
     return (
         <form id="signupForm" name="signupForm"
@@ -68,7 +70,7 @@ const SignupWindow = (props) => {
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password"/>
 
-            <label htmlFor="pass">Password: </label>
+            <label htmlFor="pass2">Password: </label>
             <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
 
             <input type="hidden" name="_csrf" value={props.csrf}/>
@@ -78,6 +80,7 @@ const SignupWindow = (props) => {
     );
 };
 
+//  loads the login window
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
         <LoginWindow csrf={csrf} />,
@@ -85,6 +88,7 @@ const createLoginWindow = (csrf) => {
     );
 };
 
+//  loads the signup window
 const createSignupWindow = (csrf) => {
     ReactDOM.render(
         <SignupWindow csrf={csrf} />,
@@ -92,6 +96,7 @@ const createSignupWindow = (csrf) => {
     );
 }
 
+//  sets up the page and enables nav bar
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
@@ -111,12 +116,14 @@ const setup = (csrf) => {
     createLoginWindow(csrf);
 };
 
+//  gets the csrf token for use and runs setup
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
     });
 };
 
+//  begins everything once the page loads
 $(document).ready(function() {
     getToken();
 });

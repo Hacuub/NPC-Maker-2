@@ -1,13 +1,14 @@
+//  displays message on the error section
 const handleError = (message) => {
     $("#errorMessage").text(message);
-    $("#npcMessage").animate({width:'toggle'}, 350);
 };
 
+//  redirects to another page
 const redirect = (response) => {
-    $("#npcMessage").animate({width:'toggle'}, 350);
     window.location = response.redirect;
 };
 
+//  helper method for interacting with the server
 const sendAjax = (type, action, data, success) => {
     $.ajax({
         cahce: false,

@@ -19,11 +19,13 @@ const makerPage = (req, res) => {
 };
 
 const makeNPC = (req, res) => {
+  //  validates npc data
   if (!req.body.name || !req.body.gender || !req.body.age || !req.body.race || !req.body.classNPC
     || !req.body.alignment || !req.body.level || !req.body.disposition || !req.body.backstory) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
+  //  stores all npc data
   const NPCData = {
     name: req.body.name,
     gender: req.body.gender,
@@ -37,12 +39,14 @@ const makeNPC = (req, res) => {
     owner: req.session.account._id,
   };
 
+  //  creates new npc
   const newNPC = new NPC.NPCModel(NPCData);
 
   const npcPromise = newNPC.save();
 
   npcPromise.then(() => res.json({ redirect: '/maker' }));
 
+  //  checks if npc is valid
   npcPromise.catch((err) => {
     console.log(err);
     if (err.code === 11000) {
@@ -55,7 +59,9 @@ const makeNPC = (req, res) => {
   return npcPromise;
 };
 
+//  deletes npc from database
 const deleteNPC = (req, res) => {
+  //  connects to mongo
   mongoDB.connect(dbURL, (err, db) => {
     if (err) {
       console.log('Could not connect to database');
@@ -63,6 +69,7 @@ const deleteNPC = (req, res) => {
     }
 
     const dbo = db.db('NPCMaker');
+    //  deletes npc based on passed in id
     const query = { _id: new mongodbID.ObjectID(req.body._id) };
     dbo.collection('npcs').deleteOne(query, (err1) => {
       if (err1) {

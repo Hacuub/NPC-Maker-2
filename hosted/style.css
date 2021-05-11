@@ -6,24 +6,35 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
     background-color: grey;
 }
 
-#logo {
-    height: 40px;
-    width: 40;
-    padding-top: 5px;
-    float:left;
-    border-radius: 8px;
+.logo {
+    height: 180px;
+    width: 180px;
+    justify-content: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    text-align: center;
+    color: black;
+    font-size: 2.5em;
 }
 
 nav {
     width: 100%;
-    height: 50px;
+    height: 3em;
     background-color: #c73032;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.5em;
 }
 
 nav:nth-child(1) {
@@ -55,13 +66,19 @@ nav:nth-child(1) {
 
 .npcForm {
     border: 2px solid #930C10;
-    height: 35px;
+    height: 15em;
     width: 700px;
     margin-top:0px;
     padding-top:10px;
     background-color: #c73032;
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
+    display: grid;
+    justify-content: center;
+}
+
+#submitDiv {
+    text-align: center;
 }
 
 .npcForm label {
@@ -77,11 +94,38 @@ nav:nth-child(1) {
     float:left;
 }
 
+#success {
+    justify-content: center;
+    text-align: center;
+}
+
+
+
+#search {
+    border: 2px solid #930C10;
+    height: 2.75em;
+    width: 700px;
+    margin-top:0px;
+    padding-top:10px;
+    background-color: #c73032;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    text-align: center;
+}
+
+.searchBarText {
+    font-size: 1.5em;
+}
+
+.searchSubmit {
+    font-size: 1.5em;
+}
+
 .makeNPCSubmit {
     transition: background-color 0.4s ease;
     display: inline;
     width: 90px;
-    background-color: #c73032;
+    background-color: #8a5758;
     border-radius: 2px;
     color: white;
     text-decoration: none;
@@ -96,12 +140,49 @@ nav:nth-child(1) {
     background-color: #930C10;
 }
 
+.main {
+    display: flex;
+    margin-top: 2em;
+    justify-content: space-between;
+}
+
+
 .mainForm {
-    height: 300px;
+    height: 200px;
     width: 350px;
     margin: 0 auto;
-    padding-top: 350px;
+    padding-top: 100px;
     font-size: 1.2em;
+    border-radius: 8px;
+    background-color:rgb(65, 65, 65);
+    text-align: center;
+}
+
+.npcDelete {
+    transition: background-color 0.4s ease;
+    display: inline;
+    width: 90px;
+    background-color: #8a5758;
+    border-radius: 2px;
+    color: white;
+    text-decoration: none;
+}
+
+.npcDelete:link, .npcDelete:visited, .npcDelete:hover, .npcDelete:active {
+    color: white;
+}
+
+.npcDelete:hover {
+    transition: background-color 0.4s ease;
+    background-color: #930C10;
+}
+
+.ad {
+    min-width: 128px;
+    max-width: 256px;
+    min-height: 384px;
+    margin-left: 2em;
+    margin-right: 2em;
 }
 
 .mainForm h3 {
@@ -154,33 +235,23 @@ nav:nth-child(1) {
 }
 
 #npcMessage {
-    display:none;
-    top: 250px;
-    width: 250px;
+    margin: auto;
+    width: 12.5%;
     height: 650px;
-    position: absolute;
     z-index: 200;
-    right: 0px;
-    overflow: hidden;
+    text-align: center;
 }
 
 #npcMessage h3 {
     width: 200px;
     position: absolute;
-    top: 0px;
-    left: 20px;
 }
 
-#speech {
-    height: 120px;
-    width: 250px;
-    z-index:300;
-}
 
 #errorMessage {
     font-size: 1.2em;
     font-weight: bold;
-    color: #c73032;
+    color: black;
     font-style: italic;
 }
 
@@ -216,13 +287,6 @@ nav:nth-child(1) {
     overflow: hidden;
 }
 
-.NPC:hover {
-    transition: border-color 0.2s ease-out;
-    border-color: rgba(255,255,255, 0.8);
-    transition: background-color 2.6s ease-out;
-    background-color: #930C10;
-}
-
 h3.emptyNPC {
     width: 400px;
     font-size: 1.5em;
@@ -237,4 +301,47 @@ h3.emptyNPC {
 
 .NPC:last-child {
     margin-bottom:10px;
+}
+
+.updateForm {
+    border: 2px solid #930C10;
+    height: 15em;
+    width: 700px;
+    margin-top:0px;
+    padding-top:10px;
+    background-color: #c73032;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    display: grid;
+    justify-content: center;
+}
+
+.updateForm label {
+    font-size: 1.2em;
+    color: white;
+    text-align: center;
+}
+
+.updateForm input[type=text] {
+    float:left;
+    margin: 1em;
+}
+
+.updateSubmit {
+    transition: background-color 0.4s ease;
+    display: inline;
+    width: 180px;
+    background-color: #8a5758;
+    border-radius: 2px;
+    color: white;
+    text-decoration: none;
+}
+
+.updateSubmit:link, .updateSubmit:visited, .updateSubmit:hover, .updateSubmit:active {
+    color: white;
+}
+
+.updateSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #930C10;
 }

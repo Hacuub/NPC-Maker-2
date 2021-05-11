@@ -7,24 +7,38 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <!-- link rel="stylesheet" type="text/css" href="/assets/style.css"/ -->
 </head>
 <body>
+  <img class="logo" src="assets/img/dndBlack.png">
+  <h1 class = "title">NPC Maker</h1>
   <nav></a>
     <div class="navlink"><a href="/logout">Log out</a></div>
     <div class="navlink"><a id="randomButton" href="/random">Random</a></div>
     <div class="navlink"><a id="searchButton" href="/search">Search</a></div>
     <div class="navlink"><a id="submitButton" href="/submit">Submit</a></div>
     <div class="navlink"><a id="adminButton" href="/admin">Admin</a></div>
+    <div class="navlink"><a id="accountButton" href="/account">Account</a></div>
   </nav>
-  <section id="makeNPC">
+  <section class="main">
+    <img class ="ad" src = "/assets/img/advertisement.png">
+    <section class="makerContent">
+      <section id="accountChange">
+      </section>
+      <section id="makeNPC">
+      </section>
+      <section id="searchBar">
+      </section>
+      <section id="NPCs">
+      </section>
+      <section id="success">
+      </section>
+    </section>
+    <img class="ad" src = "/assets/img/advertisement.png">
   </section>
-  <section id="searchBar">
-  </section>
-  <section id="NPCs">
-  </section>
-  <section id="success">
-  </section>
+    <div id="npcMessage">
+    <h3><span id="errorMessage"></span></h3>
+  </div>
   <script src="/assets/bundle.js"></script>
 </body>
 </html>

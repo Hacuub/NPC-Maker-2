@@ -1,6 +1,7 @@
 const controllers = require('./controllers');
 const mid = require('./middleware');
 
+//  sets up all of the endpoints
 const router = (app) => {
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
 
@@ -15,6 +16,8 @@ const router = (app) => {
 
   app.get('/getNPCs', mid.requiresLogin, controllers.NPC.getNPCs);
   app.delete('/delete', mid.requiresSecure, controllers.NPC.deleteNPC);
+
+  app.post('/account', mid.requiresLogin, controllers.Account.updatePassword);
 
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

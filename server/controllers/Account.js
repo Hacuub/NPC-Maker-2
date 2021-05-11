@@ -1,5 +1,10 @@
 // const { response } = require('express');
+const mongoDB = require('mongodb').MongoClient;
+const mongodbID = require('mongodb');
+
 const models = require('../models');
+
+const dbURL = 'mongodb+srv://hacuub:Five85585@cluster0.twdhr.mongodb.net/NPCMaker?retryWrites=true&w=majority';
 
 const { Account } = models;
 
@@ -103,8 +108,60 @@ const getToken = (request, response) => {
   res.json(csrfJSON);
 };
 
+//  updates the users password
+const updatePassword = (request, response) => {
+  const req = request;
+  const res = response;
+
+  //  connect to mongo
+  mongoDB.connect(dbURL, (err, db) => {
+    if (err) {
+      console.log('Could not connect to database');
+      throw err;
+    }
+
+    if (req.body.pass !== req.body.pass2) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+    }
+
+    if (!req.body.pass || !req.body.pass2) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const dbo = db.db('NPCMaker');
+    //  gets the user id
+    const myquery = { _id: new mongodbID.ObjectID(req.session.account._id) };
+
+    // creates new salt and hash based on updated password
+    Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+      const newData = {
+        salt,
+        password: hash,
+      };
+
+      //  formats new values to be uploaded
+      const newvalue = {
+        $set: {
+          salt: newData.salt,
+          password: newData.password,
+        },
+      };
+      //  updates mongo database
+      dbo.collection('accounts').updateOne(myquery, newvalue, (err1) => {
+        if (err1) {
+          console.log('Could not update from database');
+          throw err1;
+        }
+      });
+    });
+    db.close();
+    return response.status(204).json({ message: `Updated entry with id ${req.body._id}` });
+  });
+};
+
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.getToken = getToken;
+module.exports.updatePassword = updatePassword;

@@ -129,32 +129,29 @@ const updatePassword = (request, response) => {
     }
 
     const dbo = db.db('NPCMaker');
-    //  gets the user id
     const myquery = { _id: new mongodbID.ObjectID(req.session.account._id) };
 
-    // creates new salt and hash based on updated password
     Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
       const newData = {
         salt,
         password: hash,
       };
 
-      //  formats new values to be uploaded
       const newvalue = {
         $set: {
           salt: newData.salt,
           password: newData.password,
         },
       };
-      //  updates mongo database
       dbo.collection('accounts').updateOne(myquery, newvalue, (err1) => {
         if (err1) {
           console.log('Could not update from database');
           throw err1;
         }
       });
+
+      db.close();
     });
-    db.close();
     return response.status(204).json({ message: `Updated entry with id ${req.body._id}` });
   });
 };
